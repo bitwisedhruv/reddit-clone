@@ -5,6 +5,8 @@ import 'package:reddit/core/common/error_screen.dart';
 import 'package:reddit/core/common/loader.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/community/controller/community_controller.dart';
+import 'package:reddit/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class CommunityScreen extends ConsumerWidget {
   final String name;
@@ -12,6 +14,10 @@ class CommunityScreen extends ConsumerWidget {
     super.key,
     required this.name,
   });
+
+  void navigateToModTools(BuildContext context) {
+    Routemaster.of(context).push('/mod-tools/$name');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,10 +44,36 @@ class CommunityScreen extends ConsumerWidget {
                     actions: [
                       GestureDetector(
                         child: const CircleAvatar(
+                          backgroundColor: Pallete.drawerColor,
                           child: Icon(
                             Icons.search,
                           ),
                         ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      GestureDetector(
+                        child: const CircleAvatar(
+                          backgroundColor: Pallete.drawerColor,
+                          child: Icon(
+                            Icons.search,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      GestureDetector(
+                        child: const CircleAvatar(
+                          backgroundColor: Pallete.drawerColor,
+                          child: Icon(
+                            Icons.search,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
                       ),
                     ],
                   ),
@@ -72,7 +104,8 @@ class CommunityScreen extends ConsumerWidget {
                               ),
                               community.mods.contains(user.uid)
                                   ? OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          navigateToModTools(context),
                                       style: OutlinedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -98,7 +131,9 @@ class CommunityScreen extends ConsumerWidget {
                                         ),
                                       ),
                                       child: Text(
-                                        community.members.contains(user.uid) ? 'Joined':'Join',
+                                        community.members.contains(user.uid)
+                                            ? 'Joined'
+                                            : 'Join',
                                       ),
                                     ),
                             ],
