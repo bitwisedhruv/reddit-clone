@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -8,25 +7,40 @@ import 'package:reddit/core/common/error_screen.dart';
 import 'package:reddit/core/common/loader.dart';
 import 'package:reddit/core/constants/constants.dart';
 import 'package:reddit/core/utils.dart';
-import 'package:reddit/features/community/controller/community_controller.dart';
-import 'package:reddit/models/community_model.dart';
+import 'package:reddit/features/auth/controller/auth_controller.dart';
+import 'package:reddit/features/user_profile/controller/user_profile_controller.dart';
 import 'package:reddit/theme/pallete.dart';
 
-class EditCommunityScreen extends ConsumerStatefulWidget {
-  final String name;
-  const EditCommunityScreen({
+class EditProfileScreen extends ConsumerStatefulWidget {
+  final String uid;
+  const EditProfileScreen({
     super.key,
-    required this.name,
+    required this.uid,
   });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EditCommunityScreenState();
+      _EditProfileScreenState();
 }
 
-class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
+class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   File? bannerFile;
-  File? avatarFile;
+  File? profileFile;
+
+  late TextEditingController nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: ref.read(userProvider)!.name);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
+
   void selectBannerImage() async {
     final res = await pickImage();
     if (res != null) {
@@ -40,32 +54,34 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
     final res = await pickImage();
     if (res != null) {
       setState(() {
-        avatarFile = File(res.files.first.path!);
+        profileFile = File(res.files.first.path!);
       });
     }
   }
 
-  void save(Community community) {
-    ref.read(communityControllerProvider.notifier).editCommunity(
-        avatar: avatarFile,
-        banner: bannerFile,
-        community: community,
-        context: context);
+  void save() {
+    ref.read(userProfileControllerProvider.notifier).editProfile(
+          avatar: profileFile,
+          banner: bannerFile,
+          context: context,
+          name: nameController.text.trim(),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(communityControllerProvider);
-    return ref.watch(getCommunityByNameProvider(widget.name)).when(
-          data: (community) {
+    final isLoading = ref.watch(userProfileControllerProvider);
+
+    return ref.watch(getUserDataProvider(widget.uid)).when(
+          data: (user) {
             return Scaffold(
               backgroundColor: Pallete.darkModeAppTheme.scaffoldBackgroundColor,
               appBar: AppBar(
-                title: const Text('Edit community'),
+                title: const Text('Edit profile'),
                 centerTitle: false,
                 actions: [
                   TextButton(
-                    onPressed: () => save(community),
+                    onPressed: save,
                     child: const Text(
                       "Save",
                     ),
@@ -99,8 +115,8 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                                       ),
                                       child: bannerFile != null
                                           ? Image.file(bannerFile!)
-                                          : community.banner.isEmpty ||
-                                                  community.banner ==
+                                          : user.banner.isEmpty ||
+                                                  user.banner ==
                                                       Constants.bannerDefault
                                               ? const Center(
                                                   child: Icon(
@@ -108,7 +124,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                                                     size: 40,
                                                   ),
                                                 )
-                                              : Image.network(community.banner),
+                                              : Image.network(user.banner),
                                     ),
                                   ),
                                 ),
@@ -117,15 +133,15 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                                   left: 20,
                                   child: GestureDetector(
                                     onTap: selectAvatarImage,
-                                    child: avatarFile != null
+                                    child: profileFile != null
                                         ? CircleAvatar(
                                             backgroundImage:
-                                                FileImage(avatarFile!),
+                                                FileImage(profileFile!),
                                             radius: 32,
                                           )
                                         : CircleAvatar(
                                             backgroundImage:
-                                                NetworkImage(community.avatar),
+                                                NetworkImage(user.profilePic),
                                             radius: 32,
                                           ),
                                   ),
@@ -133,6 +149,21 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                               ],
                             ),
                           ),
+                          TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              // filled: true,
+                              hintText: 'Name',
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.blue,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(18),
+                            ),
+                          )
                         ],
                       ),
                     ),
