@@ -6,6 +6,7 @@ import 'package:reddit/core/providers/storage_repository_provider.dart';
 import 'package:reddit/core/utils.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/user_profile/repository/user_profile_repository.dart';
+import 'package:reddit/models/post_model.dart';
 import 'package:reddit/models/user_model.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -18,6 +19,12 @@ final userProfileControllerProvider =
     ref: ref,
     storageRepository: storageRepository,
   );
+});
+
+final getUserPostsProvider = StreamProvider.family((ref, String uid) {
+  final userProfileController =
+      ref.watch(userProfileControllerProvider.notifier);
+  return userProfileController.getUserPosts(uid);
 });
 
 class UserProfileController extends StateNotifier<bool> {
@@ -76,5 +83,9 @@ class UserProfileController extends StateNotifier<bool> {
         Routemaster.of(context).pop();
       },
     );
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _userProfileRepository.getUserPosts(uid);
   }
 }
