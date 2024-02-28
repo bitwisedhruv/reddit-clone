@@ -18,22 +18,44 @@ class Pallete {
 
   // Themes
   static var darkModeAppTheme = ThemeData.dark(useMaterial3: true).copyWith(
-      scaffoldBackgroundColor: blackColor,
-      cardColor: greyColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: drawerColor,
-        iconTheme: IconThemeData(
-          color: whiteColor,
-        ),
+    scaffoldBackgroundColor: blackColor,
+    cardColor: greyColor,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: drawerColor,
+      iconTheme: IconThemeData(
+        color: whiteColor,
       ),
-      drawerTheme: const DrawerThemeData(
-        backgroundColor: drawerColor,
-      ),
-      primaryColor: redColor,
-      colorScheme: ColorScheme.fromSwatch().copyWith(
-        background: drawerColor,
-      ) // will be used as alternative background color
-      );
+    ),
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: drawerColor,
+    ),
+    primaryColor: redColor,
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      background: drawerColor, // will be used as alternative background color
+    ),
+    textTheme: const TextTheme(
+      displayLarge: TextStyle(color: whiteColor),
+      displayMedium: TextStyle(color: whiteColor),
+      displaySmall: TextStyle(color: whiteColor),
+      headlineLarge: TextStyle(color: whiteColor),
+      headlineMedium: TextStyle(color: whiteColor),
+      headlineSmall: TextStyle(color: whiteColor),
+      titleLarge: TextStyle(color: whiteColor),
+      titleMedium: TextStyle(color: whiteColor),
+      titleSmall: TextStyle(color: whiteColor),
+      bodyLarge: TextStyle(color: whiteColor),
+      bodyMedium: TextStyle(color: whiteColor),
+      bodySmall: TextStyle(color: whiteColor),
+      labelLarge: TextStyle(color: whiteColor),
+      labelMedium: TextStyle(color: whiteColor),
+      labelSmall: TextStyle(color: whiteColor),
+      
+      
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      fillColor: drawerColor,
+    )
+  );
 
   static var lightModeAppTheme = ThemeData.light(useMaterial3: true).copyWith(
     scaffoldBackgroundColor: whiteColor,
@@ -49,6 +71,9 @@ class Pallete {
       backgroundColor: whiteColor,
     ),
     primaryColor: redColor,
+    inputDecorationTheme: const InputDecorationTheme(
+      // fillColor: Colors.grey,
+    ),
   );
 }
 
@@ -59,7 +84,7 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
       : _mode = mode,
         super(Pallete.darkModeAppTheme);
 
-        ThemeMode get mode => _mode;
+  ThemeMode get mode => _mode;
 
   void getTheme() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

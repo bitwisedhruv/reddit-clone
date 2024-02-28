@@ -29,12 +29,10 @@ class ModToolsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(
               Icons.add_moderator,
-              color: Colors.white,
             ),
             title: const Text(
               'Add moderators',
               style: TextStyle(
-                color: Colors.white,
               ),
             ),
             onTap: () => navigateToAddMod(context),
@@ -42,12 +40,10 @@ class ModToolsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(
               Icons.edit,
-              color: Colors.white,
             ),
             title: const Text(
               'Edit Community',
               style: TextStyle(
-                color: Colors.white,
               ),
             ),
             onTap: () => navigateToEditCommunity(context),

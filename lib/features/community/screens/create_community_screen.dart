@@ -52,7 +52,7 @@ class _CreateCommunityScreenState extends ConsumerState<CreateCommunityScreen> {
               controller: communityNameController,
               decoration: const InputDecoration(
                 hintText: 'r/Community_name',
-                // filled: true,
+                filled: true,
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(
                   18.0,
