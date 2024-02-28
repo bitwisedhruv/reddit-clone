@@ -22,6 +22,12 @@ final postControllerProvider =
   );
 });
 
+final userPostsProvider =
+    StreamProvider.family((ref, List<Community> communities) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.fetchUserPosts(communities);
+});
+
 class PostController extends StateNotifier<bool> {
   final PostRepository _postRepository;
   final Ref _ref;
@@ -155,5 +161,30 @@ class PostController extends StateNotifier<bool> {
         );
       },
     );
+  }
+
+  Stream<List<Post>> fetchUserPosts(List<Community> communities) {
+    if (communities.isNotEmpty) {
+      return _postRepository.fetchUserPost(communities);
+    }
+    return Stream.value([]);
+  }
+
+  void deletePost(Post post, BuildContext context) async {
+    final res = await _postRepository.deletePost(post);
+    res.fold(
+      (l) => null,
+      (r) => showSnackbar(context, 'Post deleted successfully'),
+    );
+  }
+
+  void upvote(Post post) {
+    final user = _ref.read(userProvider)!;
+    _postRepository.upvote(post, user.uid);
+  }
+
+  void downvote(Post post) {
+    final user = _ref.read(userProvider)!;
+    _postRepository.downvote(post, user.uid);
   }
 }
