@@ -31,6 +31,14 @@ class PostCard extends ConsumerWidget {
     ref.read(postControllerProvider.notifier).downvote(post);
   }
 
+  void awardPost(WidgetRef ref, String award, BuildContext context) {
+    ref.read(postControllerProvider.notifier).awardPost(
+          post: post,
+          award: award,
+          context: context,
+        );
+  }
+
   void navigateToUserProfile(BuildContext context) {
     Routemaster.of(context).push('/u/${post.uid}');
   }
@@ -124,6 +132,24 @@ class PostCard extends ConsumerWidget {
                                 ),
                             ],
                           ),
+                          if (post.awards.isNotEmpty) ...[
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 25,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: post.awards.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Image.asset(
+                                    Constants.awards[post.awards[index]]!,
+                                    height: 23,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Text(
@@ -247,6 +273,45 @@ class PostCard extends ConsumerWidget {
                                         ErrorScreen(data: error.toString()),
                                     loading: () => const Loader(),
                                   ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(
+                                          20,
+                                        ),
+                                        child: GridView.builder(
+                                            shrinkWrap: true,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4,
+                                            ),
+                                            itemCount: user.awards.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final award = user.awards[index];
+                                              return GestureDetector(
+                                                onTap: () => awardPost(
+                                                    ref, award, context),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Image.asset(
+                                                    Constants.awards[award]!,
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.card_giftcard_outlined,
+                                ),
+                              )
                             ],
                           ),
                         ],
