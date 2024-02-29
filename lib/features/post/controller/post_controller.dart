@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/providers/storage_repository_provider.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/post/repository/post_repository.dart';
+import 'package:reddit/models/comment_model.dart';
 import 'package:reddit/models/community_model.dart';
 import 'package:reddit/models/post_model.dart';
 import 'package:routemaster/routemaster.dart';
@@ -26,6 +27,14 @@ final userPostsProvider =
     StreamProvider.family((ref, List<Community> communities) {
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.fetchUserPosts(communities);
+});
+
+final getPostByIdProvider = StreamProvider.family((ref, String postId) {
+  return ref.watch(postControllerProvider.notifier).getPostById(postId);
+});
+
+final getUserCommentsProvider = StreamProvider.family((ref, String postId) {
+  return ref.watch(postControllerProvider.notifier).getUserComments(postId);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -186,5 +195,36 @@ class PostController extends StateNotifier<bool> {
   void downvote(Post post) {
     final user = _ref.read(userProvider)!;
     _postRepository.downvote(post, user.uid);
+  }
+
+  Stream<Post> getPostById(String postId) {
+    return _postRepository.getPostById(postId);
+  }
+
+  void addComment({
+    required BuildContext context,
+    required String text,
+    required Post post,
+  }) async {
+    final user = _ref.watch(userProvider)!;
+    String commentId = const Uuid().v1();
+    Comment comment = Comment(
+      id: commentId,
+      text: text,
+      createdAt: DateTime.now(),
+      postId: post.id,
+      username: user.name,
+      profilePic: user.profilePic,
+    );
+
+    final res = await _postRepository.addComment(comment);
+    res.fold(
+      (l) => showSnackbar(context, l.message),
+      (r) => null,
+    );
+  }
+
+  Stream<List<Comment>> getUserComments(String postId) {
+    return _postRepository.getUserComments(postId);
   }
 }
