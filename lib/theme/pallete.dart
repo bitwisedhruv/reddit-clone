@@ -22,6 +22,7 @@ class Pallete {
     cardColor: greyColor,
     appBarTheme: const AppBarTheme(
       backgroundColor: drawerColor,
+      foregroundColor: whiteColor,
       iconTheme: IconThemeData(
         color: whiteColor,
       ),

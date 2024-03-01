@@ -30,6 +30,7 @@ class CommunityScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    bool isGuest = !user.isAuthenticated;
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
             data: (community) => NestedScrollView(
@@ -110,6 +111,7 @@ class CommunityScreen extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              if(!isGuest)
                               community.mods.contains(user.uid)
                                   ? OutlinedButton(
                                       onPressed: () =>
