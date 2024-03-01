@@ -81,7 +81,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
             context: context,
             title: titleController.text.trim(),
             selectedCommunity: selectedCommunity ?? communities[0],
-            link: linkController.text.trim(),
+            link: 'https://${linkController.text.trim()}',
           );
     } else {
       showSnackbar(context, 'Enter all the fields');
