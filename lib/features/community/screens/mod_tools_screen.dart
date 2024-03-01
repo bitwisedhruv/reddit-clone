@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit/theme/pallete.dart';
 import 'package:routemaster/routemaster.dart';
 
 class ModToolsScreen extends ConsumerWidget {
@@ -20,6 +20,7 @@ class ModToolsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Moderators tools'),
@@ -27,23 +28,35 @@ class ModToolsScreen extends ConsumerWidget {
       body: Column(
         children: [
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.add_moderator,
+              color: currentTheme == Pallete.darkModeAppTheme
+                  ? Colors.white
+                  : Colors.black,
             ),
-            title: const Text(
+            title: Text(
               'Add moderators',
               style: TextStyle(
+                color: currentTheme == Pallete.darkModeAppTheme
+                    ? Colors.white
+                    : Colors.black,
               ),
             ),
             onTap: () => navigateToAddMod(context),
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.edit,
+              color: currentTheme == Pallete.darkModeAppTheme
+                  ? Colors.white
+                  : Colors.black,
             ),
-            title: const Text(
+            title: Text(
               'Edit Community',
               style: TextStyle(
+                color: currentTheme == Pallete.darkModeAppTheme
+                    ? Colors.white
+                    : Colors.black,
               ),
             ),
             onTap: () => navigateToEditCommunity(context),

@@ -6,6 +6,7 @@ import 'package:reddit/core/common/sign_in_button.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/community/controller/community_controller.dart';
 import 'package:reddit/models/community_model.dart';
+import 'package:reddit/theme/pallete.dart';
 import 'package:routemaster/routemaster.dart';
 
 class CommunityListDrawer extends ConsumerWidget {
@@ -23,6 +24,7 @@ class CommunityListDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.read(userProvider)!;
     bool isGuest = !user.isAuthenticated;
+    final currentTheme = ref.watch(themeNotifierProvider);
 
     return Drawer(
       child: SafeArea(
@@ -31,11 +33,22 @@ class CommunityListDrawer extends ConsumerWidget {
             isGuest
                 ? const SignInButton()
                 : ListTile(
-                    title: const Text('Create a community'),
-                    leading: const Icon(Icons.add),
+                    title: Text(
+                      'Create a community',
+                      style: TextStyle(
+                        color: currentTheme == Pallete.darkModeAppTheme
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                    leading: Icon(
+                      Icons.add,
+                      color: currentTheme == Pallete.darkModeAppTheme
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                     onTap: () => navigateToCreateCommunity(context),
                   ),
-
             if (!isGuest)
               ref.watch(userCommunitiesProvider).when(
                     data: (data) => Expanded(
@@ -44,7 +57,14 @@ class CommunityListDrawer extends ConsumerWidget {
                         itemBuilder: (BuildContext context, int index) {
                           final community = data[index];
                           return ListTile(
-                            title: Text('r/${community.name}'),
+                            title: Text(
+                              'r/${community.name}',
+                              style: TextStyle(
+                                color: currentTheme == Pallete.darkModeAppTheme
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(community.avatar),
                               radius: 15,

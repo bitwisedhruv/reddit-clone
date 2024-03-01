@@ -22,6 +22,8 @@ class ProfileDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    final currentTheme = ref.watch(themeNotifierProvider);
+
     return Drawer(
       child: SafeArea(
         child: Column(
@@ -45,12 +47,31 @@ class ProfileDrawer extends ConsumerWidget {
             ),
             const Divider(),
             ListTile(
-              title: const Text('My Porfile'),
-              leading: const Icon(Icons.person),
+              title: Text(
+                'My Profile',
+                style: TextStyle(
+                  color: currentTheme == Pallete.darkModeAppTheme
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+              leading: Icon(
+                Icons.person,
+                color: currentTheme == Pallete.darkModeAppTheme
+                    ? Colors.white
+                    : Colors.black,
+              ),
               onTap: () => navigateToUserProfile(context, user.uid),
             ),
             ListTile(
-              title: const Text('Logout'),
+              title: Text(
+                'Logout',
+                style: TextStyle(
+                  color: currentTheme == Pallete.darkModeAppTheme
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
               leading: Icon(
                 Icons.logout,
                 color: Pallete.redColor,
@@ -58,7 +79,8 @@ class ProfileDrawer extends ConsumerWidget {
               onTap: () => logout(ref),
             ),
             Switch.adaptive(
-              value: ref.watch(themeNotifierProvider.notifier).mode == ThemeMode.dark,
+              value: ref.watch(themeNotifierProvider.notifier).mode ==
+                  ThemeMode.dark,
               onChanged: (val) => toggleTheme(ref),
             ),
           ],
