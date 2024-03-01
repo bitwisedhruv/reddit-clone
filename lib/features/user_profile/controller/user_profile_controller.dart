@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/enums/enums.dart';
@@ -45,16 +46,19 @@ class UserProfileController extends StateNotifier<bool> {
   void editProfile({
     required File? avatar,
     required File? banner,
+    required Uint8List? avatarWeb,
+    required Uint8List? bannerWeb,
     required BuildContext context,
     required String name,
   }) async {
     state = true;
     UserModel user = _ref.read(userProvider)!;
-    if (avatar != null) {
+    if (avatar != null || avatarWeb != null) {
       final res = await _storageRepository.storeFiles(
         path: 'users/profile',
         id: user.uid,
         file: avatar,
+        webFile: avatarWeb,
       );
       res.fold(
         (l) => showSnackbar(context, l.message),
@@ -62,11 +66,12 @@ class UserProfileController extends StateNotifier<bool> {
       );
     }
 
-    if (banner != null) {
+    if (banner != null || bannerWeb != null) {
       final res = await _storageRepository.storeFiles(
         path: 'users/banner',
         id: user.uid,
         file: banner,
+        webFile: bannerWeb,
       );
       res.fold(
         (l) => showSnackbar(context, l.message),

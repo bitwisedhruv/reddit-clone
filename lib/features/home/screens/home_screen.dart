@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/constants/constants.dart';
@@ -7,6 +8,7 @@ import 'package:reddit/features/home/delegates/search_community_delegate.dart';
 import 'package:reddit/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit/features/home/drawers/profile_drawer.dart';
 import 'package:reddit/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -51,24 +53,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           },
         ),
         actions: [
-          GestureDetector(
-            onTap: () {
+          IconButton(
+            onPressed: () {
               showSearch(
                 context: context,
                 delegate: SearchCommunityDelegate(ref),
               );
             },
-            child: const Icon(
+            icon: const Icon(
               Icons.search,
             ),
           ),
-          const SizedBox(
-            width: 15,
-          ),
+          if (kIsWeb)
+            GestureDetector(
+              onTap: () {
+                Routemaster.of(context).push('/add-post');
+              },
+              child: const Icon(
+                Icons.add,
+              ),
+            ),
           Builder(builder: (context) {
-            return GestureDetector(
-              onTap: () => displayEndDrawer(context),
-              child: CircleAvatar(
+            return IconButton(
+              onPressed: () => displayEndDrawer(context),
+              icon: CircleAvatar(
                 backgroundImage: NetworkImage(
                   user.profilePic,
                 ),
@@ -81,24 +89,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: Constants.tabWidgets[_page],
       drawer: const CommunityListDrawer(),
       endDrawer: isGuest ? null : const ProfileDrawer(),
-      bottomNavigationBar: isGuest ? null : CupertinoTabBar(
-        activeColor: currentTheme.iconTheme.color,
-        backgroundColor: currentTheme.colorScheme.background,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
+      bottomNavigationBar: isGuest || kIsWeb
+          ? null
+          : CupertinoTabBar(
+              activeColor: currentTheme.iconTheme.color,
+              backgroundColor: currentTheme.colorScheme.background,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home,
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.add,
+                  ),
+                ),
+              ],
+              onTap: onPageChanged,
+              currentIndex: _page,
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add,
-            ),
-          ),
-        ],
-        onTap: onPageChanged,
-        currentIndex: _page,
-      ),
     );
   }
 }

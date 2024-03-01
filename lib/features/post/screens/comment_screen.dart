@@ -7,6 +7,7 @@ import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/post/controller/post_controller.dart';
 import 'package:reddit/features/post/widgets/comment_card.dart';
 import 'package:reddit/models/post_model.dart';
+import 'package:reddit/responsive/responsive.dart';
 
 class CommentScreen extends ConsumerStatefulWidget {
   final String postId;
@@ -52,13 +53,15 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                 children: [
                   PostCard(post: data),
                   if (!isGuest)
-                    TextField(
-                      onSubmitted: (val) => addComment(data),
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'Add a comment',
-                        filled: true,
-                        border: InputBorder.none,
+                    Responsive(
+                      child: TextField(
+                        onSubmitted: (val) => addComment(data),
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Add a comment',
+                          filled: true,
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   const SizedBox(

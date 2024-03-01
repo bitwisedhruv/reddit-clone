@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/common/loader.dart';
 import 'package:reddit/features/community/controller/community_controller.dart';
+import 'package:reddit/responsive/responsive.dart';
 
 class CreateCommunityScreen extends ConsumerStatefulWidget {
   const CreateCommunityScreen({super.key});
@@ -35,52 +36,54 @@ class _CreateCommunityScreenState extends ConsumerState<CreateCommunityScreen> {
         centerTitle: true,
         title: const Text('Create a community'),
       ),
-      body: isLoading ? const Loader() : Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Community name',
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: communityNameController,
-              decoration: const InputDecoration(
-                hintText: 'r/Community_name',
-                filled: true,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(
-                  18.0,
+      body: isLoading ? const Loader() : Responsive(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Community name',
                 ),
               ),
-              maxLength: 21,
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-              onPressed: createCommunity,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size(
-                  double.infinity,
-                  50,
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: communityNameController,
+                decoration: const InputDecoration(
+                  hintText: 'r/Community_name',
+                  filled: true,
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(
+                    18.0,
+                  ),
+                ),
+                maxLength: 21,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                onPressed: createCommunity,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  minimumSize: const Size(
+                    double.infinity,
+                    50,
+                  ),
+                ),
+                child: const Text(
+                  'Create community',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              child: const Text(
-                'Create community',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

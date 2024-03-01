@@ -4,12 +4,13 @@ import 'package:reddit/core/common/loader.dart';
 import 'package:reddit/core/common/sign_in_button.dart';
 import 'package:reddit/core/constants/constants.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
+import 'package:reddit/responsive/responsive.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   void signInAsGuest(WidgetRef ref, BuildContext context) {
-ref.read(authControllerProvider.notifier).signInAsGuest(context);
+    ref.read(authControllerProvider.notifier).signInAsGuest(context);
   }
 
   @override
@@ -67,7 +68,9 @@ ref.read(authControllerProvider.notifier).signInAsGuest(context);
                 const SizedBox(
                   height: 20,
                 ),
-                const SignInButton(),
+                const Responsive(
+                  child: SignInButton(),
+                ),
               ],
             ),
     );

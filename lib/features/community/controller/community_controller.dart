@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -40,8 +41,9 @@ final searchCommunityProvider = StreamProvider.family((ref, String query) {
 });
 
 final getCommunityPostsProvider = StreamProvider.family((ref, String name) {
-
-  return ref.watch(communityControllerProvider.notifier).getCommunityPosts(name);
+  return ref
+      .watch(communityControllerProvider.notifier)
+      .getCommunityPosts(name);
 });
 
 class CommunityController extends StateNotifier<bool> {
@@ -93,15 +95,18 @@ class CommunityController extends StateNotifier<bool> {
   void editCommunity({
     required File? avatar,
     required File? banner,
+    required Uint8List? avatarWeb,
+    required Uint8List? bannerWeb,
     required Community community,
     required BuildContext context,
   }) async {
     state = true;
-    if (avatar != null) {
+    if (avatar != null || avatarWeb != null) {
       final res = await _storageRepository.storeFiles(
         path: 'communities/profile',
         id: community.name,
         file: avatar,
+        webFile: avatarWeb,
       );
       res.fold(
         (l) => showSnackbar(context, l.message),
@@ -109,11 +114,12 @@ class CommunityController extends StateNotifier<bool> {
       );
     }
 
-    if (banner != null) {
+    if (banner != null || bannerWeb != null) {
       final res = await _storageRepository.storeFiles(
         path: 'communities/banner',
         id: community.name,
         file: banner,
+        webFile: bannerWeb,
       );
       res.fold(
         (l) => showSnackbar(context, l.message),

@@ -14,9 +14,7 @@ class Constants {
 
   static const tabWidgets = [
     FeedScreen(),
-    AddPostScreen(
-      type: '',
-    ),
+    AddPostScreen(),
   ];
 
   static const IconData up = IconData(
